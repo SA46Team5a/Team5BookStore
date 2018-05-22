@@ -4,6 +4,18 @@
         .auto-style3 {
             margin-right: 0px;
         }
+        .newStyle1 {
+            position: absolute;
+        }
+        .newStyle2 {
+            position: absolute;
+        }
+        .newStyle3 {
+            position: absolute;
+        }
+        .newStyle4 {
+            position: absolute;
+        }
     </style>
     <script type="text/javascript" language="javascript">
         function Confirm()
@@ -18,7 +30,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h1><asp:Label ID="Label1" runat="server" Text="Shopping Cart"></asp:Label></h1>
     <div>
-               <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" Height="324px" Width="707px" CssClass="auto-style3" DataKeyNames="CartItemID" OnRowDeleting="GridView1_RowDeleting">
+               <asp:GridView ID="GridView1" runat="server" EnableViewState="false" AutoGenerateColumns="False" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" Height="324px" Width="707px" CssClass="auto-style3" DataKeyNames="CartItemID" OnRowDeleting="GridView1_RowDeleting">
                    <Columns>
                        <asp:TemplateField HeaderText="Item">
                            <ItemTemplate>
@@ -47,7 +59,7 @@
 
                        <asp:TemplateField HeaderText="Quantity">
                            <ItemTemplate>
-                               <asp:TextBox ID="TextBox1" runat="server" TextMode="Number" min="1" max="20" step="1" Text='<%#Eval("Quantity") %>'></asp:TextBox>
+                               <asp:TextBox ID="TextBox1" runat="server" EnableViewState="false" TextMode="Number" min="1" max="20" step="1" Text='<%#Eval("Quantity") %>'></asp:TextBox>
                                <%--<asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Quantity out of range" ControlToValidate="TextBox1" Type="Integer" MinimumValue="1" MaximumValue='<%=maxValue.ToString() %>'></asp:RangeValidator>--%>
                            </ItemTemplate>
                        </asp:TemplateField>
@@ -70,15 +82,24 @@
                 <SortedDescendingHeaderStyle BackColor="#383838" />
         </asp:GridView>
     
-               <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Refresh" />
                <br />
     
-               <asp:Label ID="Label8" runat="server" Text="Total:"></asp:Label>
-               <asp:Label ID="TotalAmountLabel" runat="server" Text="Total Amount"></asp:Label>
+               <asp:Button ID="RefreshButton" runat="server" OnClick="RefreshButton_Click" Text="Refresh Cart" style="position:relative; float:left; margin-left:600px; top: -1px; left: -1px;"/>
+               <br />
+               <br />
+               
+               <asp:Label ID="Label8" runat="server" CssClass="newStyle4" style="position:relative; margin-left:0px; top: 5px; left: 0px; width: 45px; height: 23px; right: 868px; bottom: 141px" Text="Total:"></asp:Label>
+               <asp:Label ID="TotalAmountLabel" runat="server" Text="Total Amount" style="position:relative; float:left; margin-left:650px; top: 5px; left: -7px; width: 101px; bottom: 141px;"></asp:Label>
+
+               <br />
+  
                <br />
                <br />
     
-               <asp:Button ID="CheckOutButton" runat="server" OnClick="CheckOutButton_Click" Text="Check Out" OnClientClick="return Confirm();"/>
+               <asp:Button ID="CheckOutButton" runat="server" OnClick="CheckOutButton_Click" Text="Check Out" OnClientClick="return Confirm();"  style="position:relative; float:left; margin-left:570px; bottom: 10px; left: 26px; height: 42px; width: 125px;"/>
+    
+               <br />
+               <br />
     
                <br />
 

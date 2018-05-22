@@ -20,18 +20,8 @@ namespace Team5BookStore
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //List<CartItem> cartItemList = CartItemModel.GetCartItems("Madele68");
-            //BookStoreEntities model = new BookStoreEntities();
+
             BindGrid();
-            //GridView1.DataSource = cartItemList;
-            //GridView1.DataBind();
-
-            //int minValue = 1;
-            
-            //if (Int32.Parse(TextBox2.Text) > maxValue)
-            {
-
-            }
 
             RangeValidator1.MaximumValue = Convert.ToString(maxValue);
 
@@ -43,12 +33,6 @@ namespace Team5BookStore
             List<CartItem> cartItemList = CartItemModel.GetCartItems(username);
             GridView1.DataSource = cartItemList;
             GridView1.DataBind();
-        }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            //some method to update cart quantity;
-            //compute amount = price * quantity;
         }
 
         protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -76,21 +60,20 @@ namespace Team5BookStore
             //Response.Redirect("~/Receipt.aspx");
         }
 
-        //    protected void TextBox1_TextChanged(object sender, EventArgs e)
-        //    {
-        //        TextBox thisTextBox = (TextBox)sender;
-        //        GridViewRow thisGridViewRow = (GridViewRow)thisTextBox.Parent.Parent;
-        //        int row = thisGridViewRow.RowIndex;
-        //        //rowChanged[row] = true;
-
-        //        Button1.Text= ((TextBox)sender).Text;
-        //    }
-
-        //    protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
-        //    {
-        //        GridViewRow thisGridViewRow = (GridViewRow)sender;
-        //        int row = thisGridViewRow.RowIndex;
-        //        Button1.Text = row.ToString();
-        //    }
+        protected void RefreshButton_Click(object sender, EventArgs e)
+        {
+            foreach (GridViewRow row in GridView1.Rows)
+            {
+                if (row.RowType == DataControlRowType.DataRow)
+                {
+                    TextBox textBox = row.FindControl("TextBox1") as TextBox;
+                    int newQuantity = Convert.ToInt32(textBox.Text);
+                    int cartItemId = Convert.ToInt32(GridView1.DataKeys[row.RowIndex].Values[0]);
+                    //Label1.Text += cartItemId.ToString() + "," + newQuantity.ToString()+"\n";
+                    CartItemModel.UpdateCartItemQuantity(cartItemId, newQuantity);
+                }
+            }
+            BindGrid();
+        }
     }
 }
