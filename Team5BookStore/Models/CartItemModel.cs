@@ -67,7 +67,7 @@ namespace Team5BookStore.Models
         private static List<CartItem> GetCartItems(UserDetail user)
         {
             Cart cart = CartModel.GetOpenCart(user);
-            List<CartItem> cartItems = context.CartItems.Where(ci => ci.Cart == cart).ToList();
+            List<CartItem> cartItems = context.CartItems.Where(ci => ci.Cart.CartID == cart.CartID).ToList();
             cartItems.Select(ci => ci.Book).ToList();
             return cartItems;
         }
@@ -76,6 +76,12 @@ namespace Team5BookStore.Models
     public class CartModel
     {
         private static BookStoreEntities context = BookStoreEntities.Instance;
+
+        public static void CheckOutCart(string userName)
+        {
+            context.Carts.First(c => c.UserName == userName && !c.CheckedOut).CheckedOut = true;
+            context.SaveChanges();
+        }
 
         public static Cart CreateCart(UserDetail user)
         {

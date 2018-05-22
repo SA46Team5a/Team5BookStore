@@ -11,6 +11,7 @@ namespace Team5BookStore
     public partial class ShoppingCart : System.Web.UI.Page
     {
         int maxValue = 10;
+        string username = "LeTawn55";
 
         void Page_PreInit(Object sender, EventArgs e)
         {
@@ -19,10 +20,11 @@ namespace Team5BookStore
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            BookStoreEntities model = new BookStoreEntities();
-
-            GridView1.DataSource = model.CartItems.ToList<CartItem>();
-            GridView1.DataBind();
+            //List<CartItem> cartItemList = CartItemModel.GetCartItems("Madele68");
+            //BookStoreEntities model = new BookStoreEntities();
+            BindGrid();
+            //GridView1.DataSource = cartItemList;
+            //GridView1.DataBind();
 
             //int minValue = 1;
             
@@ -32,29 +34,63 @@ namespace Team5BookStore
             }
 
             RangeValidator1.MaximumValue = Convert.ToString(maxValue);
+
+            TotalAmountLabel.Text = string.Format("{0:C}", TotalPrice(CartItemModel.GetCartItems(username)));
          }
+
+        private void BindGrid()
+        {
+            List<CartItem> cartItemList = CartItemModel.GetCartItems(username);
+            GridView1.DataSource = cartItemList;
+            GridView1.DataBind();
+        }
 
         protected void Button1_Click(object sender, EventArgs e)
         {
             //some method to update cart quantity;
             //compute amount = price * quantity;
         }
-        
-        protected void TextBox1_TextChanged(object sender, EventArgs e)
-        {
-            TextBox thisTextBox = (TextBox)sender;
-            GridViewRow thisGridViewRow = (GridViewRow)thisTextBox.Parent.Parent;
-            int row = thisGridViewRow.RowIndex;
-            //rowChanged[row] = true;
 
-            Button1.Text= ((TextBox)sender).Text;
+        protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            //Label1.Text = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Values[0]).ToString();
+            int cartItemId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Values[0]);
+            CartItemModel.RemoveFromCart(cartItemId);
+            BindGrid();
+            
         }
 
-        protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+        protected decimal? TotalPrice(List<CartItem> cartItemList)
         {
-            GridViewRow thisGridViewRow = (GridViewRow)sender;
-            int row = thisGridViewRow.RowIndex;
-            Button1.Text = row.ToString();
+            decimal? sum = 0;
+            foreach(CartItem ci in cartItemList)
+            {
+                sum += ci.TotalPrice; 
+            }
+            return sum;
         }
+
+        protected void CheckOutButton_Click(object sender, EventArgs e)
+        {
+            //CartModel.CheckOutCart(username);
+            //Response.Redirect("~/Receipt.aspx");
+        }
+
+        //    protected void TextBox1_TextChanged(object sender, EventArgs e)
+        //    {
+        //        TextBox thisTextBox = (TextBox)sender;
+        //        GridViewRow thisGridViewRow = (GridViewRow)thisTextBox.Parent.Parent;
+        //        int row = thisGridViewRow.RowIndex;
+        //        //rowChanged[row] = true;
+
+        //        Button1.Text= ((TextBox)sender).Text;
+        //    }
+
+        //    protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+        //    {
+        //        GridViewRow thisGridViewRow = (GridViewRow)sender;
+        //        int row = thisGridViewRow.RowIndex;
+        //        Button1.Text = row.ToString();
+        //    }
     }
 }
