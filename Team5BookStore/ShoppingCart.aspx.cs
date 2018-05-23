@@ -10,21 +10,20 @@ namespace Team5BookStore
 {
     public partial class ShoppingCart : System.Web.UI.Page
     {
-        int maxValue = 10;
+        int maxValue;
         string username = "LeTawn55";
 
         void Page_PreInit(Object sender, EventArgs e)
         {
-            this.MasterPageFile = "~/AllUsers.Master";
+            //MasterPage.Picker(this);
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //Label1.Text = getStockLevel("9780060555665").ToString();
             BindGrid();
 
-            RangeValidator1.MaximumValue = Convert.ToString(maxValue);
-
+            //RangeValidator1.MaximumValue = Convert.ToString(maxValue);
             TotalAmountLabel.Text = string.Format("{0:C}", TotalPrice(CartItemModel.GetCartItems(username)));
          }
 
@@ -41,7 +40,8 @@ namespace Team5BookStore
             int cartItemId = Convert.ToInt32(GridView1.DataKeys[e.RowIndex].Values[0]);
             CartItemModel.RemoveFromCart(cartItemId);
             BindGrid();
-            
+            TotalAmountLabel.Text = string.Format("{0:C}", TotalPrice(CartItemModel.GetCartItems(username)));
+
         }
 
         protected decimal? TotalPrice(List<CartItem> cartItemList)
@@ -69,11 +69,49 @@ namespace Team5BookStore
                     TextBox textBox = row.FindControl("TextBox1") as TextBox;
                     int newQuantity = Convert.ToInt32(textBox.Text);
                     int cartItemId = Convert.ToInt32(GridView1.DataKeys[row.RowIndex].Values[0]);
-                    //Label1.Text += cartItemId.ToString() + "," + newQuantity.ToString()+"\n";
                     CartItemModel.UpdateCartItemQuantity(cartItemId, newQuantity);
                 }
             }
             BindGrid();
+            TotalAmountLabel.Text = string.Format("{0:C}", TotalPrice(CartItemModel.GetCartItems(username)));
+
+        }
+
+        protected int getStockLevel(string ISBN)
+        {
+            using (BookStoreEntities m = new BookStoreEntities())
+            {
+                Book b = m.Books.Where(x => x.ISBN == ISBN).First();
+                return b.StockLevel;
+            }
+
+        }
+
+        //protected string quantityValidator(string ISBN)
+        //{
+            
+        //    if (quantity <= 0)
+        //    {
+        //        return "Quantity cannot be less than zero";
+        //    }
+        //    else if(quantity>= getStockLevel(ISBN))
+        //    {
+        //        return "Maximum Quantity at " + getStockLevel(ISBN).ToString();
+        //    }
+        //    else
+        //    {
+        //        return "";
+        //    }
+        //}
+
+        protected string displayPrice(decimal Price, decimal FinalPrice)
+        {
+            return (Price != FinalPrice) ? string.Format("{0:C}", FinalPrice) : "";
+        }
+
+        protected bool isStrikethrough(decimal Price, decimal FinalPrice)
+        {
+            return (Price == FinalPrice) ? false : true;
         }
     }
 }

@@ -20,7 +20,7 @@
     <script type="text/javascript" language="javascript">
         function Confirm()
         {
-          if (confirm("Are you sure?")==true)
+          if (confirm("Are you sure you want to check out?")==true)
             return true;
           else
             return false;
@@ -30,7 +30,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h1><asp:Label ID="Label1" runat="server" Text="Shopping Cart"></asp:Label></h1>
     <div>
-               <asp:GridView ID="GridView1" runat="server" EnableViewState="false" AutoGenerateColumns="False" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" Height="324px" Width="707px" CssClass="auto-style3" DataKeyNames="CartItemID" OnRowDeleting="GridView1_RowDeleting">
+               <asp:GridView ID="GridView1" runat="server" EnableViewState="False" AutoGenerateColumns="False" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" Height="324px" Width="707px" CssClass="auto-style3" DataKeyNames="CartItemID" OnRowDeleting="GridView1_RowDeleting">
                    <Columns>
                        <asp:TemplateField HeaderText="Item">
                            <ItemTemplate>
@@ -52,19 +52,18 @@
 
                        <asp:TemplateField HeaderText="Price">
                            <ItemTemplate>
-                               <asp:Label ID="Label4" runat="server" Font-Strikeout="true" Text='<%# string.Format("{0:C}", Eval("Book.Price")) %>'></asp:Label>
-                               <asp:Label ID="Label7" runat="server" Text='<%# string.Format("{0:C}", Eval("FinalPrice")) %>'></asp:Label>
+                               <asp:Label ID="Label4" runat="server"  Font-Strikeout='<%# isStrikethrough(Convert.ToInt32(Eval("Book.Price")), Convert.ToInt32(Eval("FinalPrice"))) %>' Text='<%# string.Format("{0:C}", Eval("Book.Price")) %>'></asp:Label>
+                               <asp:Label ID="Label7" runat="server" Text='<%# displayPrice(Convert.ToInt32(Eval("Book.Price")), Convert.ToInt32(Eval("FinalPrice"))) %>'></asp:Label>
                            </ItemTemplate>
                        </asp:TemplateField>
 
                        <asp:TemplateField HeaderText="Quantity">
                            <ItemTemplate>
-                               <asp:TextBox ID="TextBox1" runat="server" EnableViewState="false" TextMode="Number" min="1" max="20" step="1" Text='<%#Eval("Quantity") %>'></asp:TextBox>
-                               <%--<asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Quantity out of range" ControlToValidate="TextBox1" Type="Integer" MinimumValue="1" MaximumValue='<%=maxValue.ToString() %>'></asp:RangeValidator>--%>
+                               <asp:TextBox ID="TextBox1" runat="server" EnableViewState="false" TextMode="Number" min="1" max='<%# getStockLevel(Eval("Book.ISBN").ToString()) %>' step="1" Text='<%#Eval("Quantity") %>'></asp:TextBox>
                            </ItemTemplate>
                        </asp:TemplateField>
 
-                       <asp:TemplateField HeaderText="Amount">
+                       <asp:TemplateField HeaderText="Subtotal">
                            <ItemTemplate>
                                <asp:Label ID="AmountLabel" runat="server" Text='<%# string.Format("{0:C}", Eval("TotalPrice")) %>'></asp:Label>
                            </ItemTemplate>
@@ -88,7 +87,9 @@
                <br />
                <br />
                
-               <asp:Label ID="Label8" runat="server" CssClass="newStyle4" style="position:relative; margin-left:0px; top: 5px; left: 0px; width: 45px; height: 23px; right: 868px; bottom: 141px" Text="Total:"></asp:Label>
+               <asp:Label ID="Label8" runat="server" CssClass="newStyle4" style="position:relative; margin-left:600px; top: 5px; left: -7px; width: 45px; height: 23px; right: 868px; bottom: 141px" Text="Total Amount:"></asp:Label>
+               <br />
+               <br />
                <asp:Label ID="TotalAmountLabel" runat="server" Text="Total Amount" style="position:relative; float:left; margin-left:650px; top: 5px; left: -7px; width: 101px; bottom: 141px;"></asp:Label>
 
                <br />
@@ -102,11 +103,6 @@
                <br />
     
                <br />
-
-    <!--
-        <asp:TextBox ID="TextBox1" runat="server" TextMode="Number" min="1" max="20" step="1">1</asp:TextBox>
-        <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Quantity out of range" ControlToValidate="TextBox1" Type="Integer" MinimumValue="1" MaximumValue='<%=maxValue%>'></asp:RangeValidator>
-                           -->
                
     </div>
     
